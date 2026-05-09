@@ -13,7 +13,7 @@ def test_parse_selected_health_records(tmp_path: Path) -> None:
   <Record type="HKQuantityTypeIdentifierUnknownThing" value="1" startDate="2026-05-09 08:00:00 +0200"/>
   <Workout workoutActivityType="HKWorkoutActivityTypeRunning" sourceName="Watch" startDate="2026-05-09 09:00:00 +0200" endDate="2026-05-09 09:30:00 +0200"/>
 </HealthData>''')
-    records, stats = parse_records(xml)
+    records, stats = parse_records(xml, include_types=("HKQuantityTypeIdentifierStepCount", "HKQuantityTypeIdentifierHeartRate", "Workout"))
     assert stats.parsed == 3
     assert stats.skipped == 1
     assert {r["category"] for r in records} == {"daily", "vitals", "workout"}
