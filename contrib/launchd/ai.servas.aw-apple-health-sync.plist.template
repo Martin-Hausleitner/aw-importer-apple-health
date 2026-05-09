@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ai.servas.aw-apple-health-sync</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>__REPO_DIR__/scripts/sync-health-folder.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HEALTH_SYNC_RAW_DIR</key>
+    <string>__HOME__/health-sync/raw</string>
+    <key>HEALTH_SYNC_LOG_DIR</key>
+    <string>__HOME__/Library/Logs/aw-activitywatch-stack</string>
+    <key>APPLE_HEALTH_IMPORTER</key>
+    <string>__REPO_DIR__/.venv/bin/aw-importer-apple-health</string>
+  </dict>
+
+  <key>StartInterval</key>
+  <integer>900</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>__HOME__/Library/Logs/aw-activitywatch-stack/apple-health-sync.out.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>__HOME__/Library/Logs/aw-activitywatch-stack/apple-health-sync.err.log</string>
+</dict>
+</plist>
