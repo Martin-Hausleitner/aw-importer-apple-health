@@ -8,3 +8,11 @@ export.xml
 *.zip
 *.xml.gz
 ActivityWatchImports/
+# Local HealthKit sync/private exports
+health-sync/
+raw/
+normalized/
+*.json.local
+*.local.json
+*.xml
+*.xml.gz

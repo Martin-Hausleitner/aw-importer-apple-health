@@ -7,6 +7,8 @@ mkdir -p "$HOME/health-sync/raw" \
          "$HOME/Library/Logs/aw-activitywatch-stack" \
          "$HOME/Library/Application Support/aw-activitywatch-stack"
 
+chmod 700 "$HOME/health-sync" "$HOME/health-sync/raw" "$HOME/health-sync/normalized" "$HOME/ActivityWatchImports/apple-health" "$HOME/Library/Logs/aw-activitywatch-stack" "$HOME/Library/Application Support/aw-activitywatch-stack"
+
 echo "Created local Apple Health sync folders:"
 echo "- $HOME/health-sync/raw"
 echo "- $HOME/health-sync/normalized"

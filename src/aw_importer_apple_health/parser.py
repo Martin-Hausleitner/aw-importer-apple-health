@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import shutil
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -45,8 +46,10 @@ def _export_xml_path(path: Path) -> tuple[Path, TemporaryDirectory | None]:
             candidates = [n for n in zf.namelist() if n.endswith("export.xml")]
             if not candidates:
                 raise ValueError("Apple Health ZIP does not contain export.xml")
-            zf.extract(candidates[0], outdir)
-            return outdir / candidates[0], tmp
+            out = outdir / "export.xml"
+            with zf.open(candidates[0]) as src, out.open("wb") as dst:
+                shutil.copyfileobj(src, dst)
+            return out, tmp
     raise ValueError("Expected Apple Health export.xml, .xml.gz, or export ZIP")
 
 
@@ -62,7 +65,7 @@ def _value(attrs: dict[str, str]) -> float | str | None:
 
 def parse_records(path: Path, include_types: Iterable[str] = DEFAULT_TYPES) -> tuple[list[dict[str, Any]], ParseStats]:
     xml_path, tmp = _export_xml_path(path)
-    include = set(include_types)
+    include = {"Workout" if t.lower() in {"workout", "workouts"} else t for t in include_types}
     records: list[dict[str, Any]] = []
     stats = ParseStats()
     try:
@@ -72,7 +75,15 @@ def parse_records(path: Path, include_types: Iterable[str] = DEFAULT_TYPES) -> t
                 continue
             attrs = dict(elem.attrib)
             health_type = attrs.get("type") if elem.tag == "Record" else "Workout"
-            if health_type not in include and elem.tag != "Workout":
+            if elem.tag == "Workout" and "Workout" not in include:
+                stats.skipped += 1
+                elem.clear()
+                continue
+            if elem.tag != "Workout" and health_type not in TYPE_MAP:
+                stats.skipped += 1
+                elem.clear()
+                continue
+            if elem.tag != "Workout" and health_type not in include:
                 stats.skipped += 1
                 elem.clear()
                 continue

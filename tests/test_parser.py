@@ -27,3 +27,27 @@ def test_parse_health_sync_json(tmp_path: Path) -> None:
     assert records[0]["category"] == "daily"
     assert records[0]["type"] == "steps"
     assert records[0]["value"] == 42
+
+
+def test_include_step_does_not_import_workout(tmp_path: Path) -> None:
+    xml = tmp_path / "export.xml"
+    xml.write_text('<HealthData><Record type="HKQuantityTypeIdentifierStepCount" value="1" startDate="2026-05-09 08:00:00 +0200"/><Workout workoutActivityType="Run" startDate="2026-05-09 09:00:00 +0200" endDate="2026-05-09 09:30:00 +0200"/></HealthData>')
+    records, _ = parse_records(xml, include_types=("HKQuantityTypeIdentifierStepCount",))
+    assert len(records) == 1
+    assert records[0]["type"] == "steps"
+
+
+def test_unknown_include_type_is_skipped(tmp_path: Path) -> None:
+    xml = tmp_path / "export.xml"
+    xml.write_text('<HealthData><Record type="HKQuantityTypeIdentifierUnknownThing" value="1" startDate="2026-05-09 08:00:00 +0200"/></HealthData>')
+    records, stats = parse_records(xml, include_types=("HKQuantityTypeIdentifierUnknownThing",))
+    assert records == []
+    assert stats.skipped == 1
+
+
+def test_json_zero_value_and_invalid_time(tmp_path: Path) -> None:
+    path = tmp_path / "mixed.json"
+    path.write_text('[{"type":"steps","value":0,"start":"2026-05-09T08:00:00+02:00"},{"type":"steps","value":1,"start":"not-a-date"}]')
+    records = parse_json_records(path)
+    assert len(records) == 1
+    assert records[0]["value"] == 0

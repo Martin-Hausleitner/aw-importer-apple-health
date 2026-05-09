@@ -37,11 +37,11 @@ def inspect(path: Path) -> None:
     click.echo(f"parsed={stats.parsed} skipped={stats.skipped} categories={dict(by_category)}")
 
 
-def _write_records(records: list[dict], dry_run: bool = False) -> int:
+def _write_records(records: list[dict], dry_run: bool = False, state: ImportState | None = None) -> int:
     if dry_run:
         return 0
     aw = ActivityWatchClient()
-    state = ImportState.load()
+    state = state or ImportState.load()
     inserted = 0
     for record in records:
         key = stable_hash(record)
@@ -49,8 +49,8 @@ def _write_records(records: list[dict], dry_run: bool = False) -> int:
             continue
         aw.insert_record(record["category"], record)
         state.record_hashes.add(key)
+        state.save()
         inserted += 1
-    state.save()
     return inserted
 
 
@@ -87,7 +87,7 @@ def sync_folder(folder: Path, dry_run: bool) -> None:
         else:
             records, _ = parse_records(path)
         parsed += len(records)
-        inserted += _write_records(records, dry_run=dry_run)
+        inserted += _write_records(records, dry_run=dry_run, state=state)
         files += 1
         if not dry_run:
             state.imported_files[str(path)] = file_hash

@@ -28,7 +28,17 @@ TYPE_ALIASES = {
 def _parse_time(value: Any) -> str | None:
     if not value:
         return None
-    return date_parser.parse(str(value)).isoformat()
+    try:
+        return date_parser.parse(str(value)).isoformat()
+    except Exception:
+        return None
+
+
+def _first_present(*values: Any) -> Any:
+    for value in values:
+        if value is not None:
+            return value
+    return None
 
 
 def _load_payload(path: Path) -> Any:
@@ -57,7 +67,7 @@ def _normalize_one(item: dict[str, Any], fallback_type: str | None = None) -> di
         "category": category,
         "source": item.get("source") or item.get("sourceName") or item.get("device"),
         "unit": item.get("unit"),
-        "value": item.get("value") or item.get("quantity") or item.get("duration"),
+        "value": _first_present(item.get("value"), item.get("quantity"), item.get("duration")),
         "start": start,
         "end": end,
     }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -37,4 +38,6 @@ class ImportState:
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
         tmp.write_text(json.dumps({"record_hashes": sorted(self.record_hashes), "imported_files": self.imported_files}, indent=2, sort_keys=True))
+        os.chmod(tmp, 0o600)
         tmp.replace(path)
+        os.chmod(path, 0o600)

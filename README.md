@@ -68,3 +68,9 @@ Supported commands:
 - `sync-folder` — idempotently import JSON/XML/ZIP files from a local dropzone.
 
 The importer keeps a local state file to avoid duplicate imports.
+
+## ActivityWatch privacy note
+
+Imported Apple Health records are written into your local ActivityWatch database. That means ActivityWatch becomes private health-data storage. Keep it local, do not publish generated reports blindly, and do not sync the ActivityWatch database to public/cloud repos.
+
+The importer stores only normalized fields from supported JSON/XML records, but those fields can still include sensitive values such as heart rate, sleep, weight, workouts, and source device names.
