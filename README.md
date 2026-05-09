@@ -74,3 +74,15 @@ The importer keeps a local state file to avoid duplicate imports.
 Imported Apple Health records are written into your local ActivityWatch database. That means ActivityWatch becomes private health-data storage. Keep it local, do not publish generated reports blindly, and do not sync the ActivityWatch database to public/cloud repos.
 
 The importer stores only normalized fields from supported JSON/XML records, but those fields can still include sensitive values such as heart rate, sleep, weight, workouts, and source device names.
+
+## Max data mode / expanded coverage
+
+The importer now recognizes a broad HealthKit subset while still recommending a small first sync. Supported categories include:
+
+- activity: steps, distances, flights, exercise/stand time, active/basal energy, VO2max
+- heart/vitals: heart rate, resting HR, walking HR average, HRV, respiratory rate, oxygen saturation, body temperature, blood pressure, blood glucose
+- body: weight, BMI, body fat, lean mass, height, waist
+- nutrition: energy, protein, carbs, fat, sugar, fiber, water, caffeine
+- sessions/habits: sleep, mindfulness, toothbrushing, handwashing, workouts
+
+For safety, start with steps/sleep/heart-rate/workouts for 30 days, then expand one category at a time.

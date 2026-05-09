@@ -51,3 +51,12 @@ def test_json_zero_value_and_invalid_time(tmp_path: Path) -> None:
     records = parse_json_records(path)
     assert len(records) == 1
     assert records[0]["value"] == 0
+
+
+def test_expanded_healthkit_types_parse(tmp_path: Path) -> None:
+    xml = tmp_path / "export.xml"
+    xml.write_text('<HealthData><Record type="HKQuantityTypeIdentifierBloodGlucose" unit="mg/dL" value="95" startDate="2026-05-09 08:00:00 +0200"/><Record type="HKQuantityTypeIdentifierDietaryCaffeine" unit="mg" value="80" startDate="2026-05-09 09:00:00 +0200"/><Record type="HKQuantityTypeIdentifierVO2Max" unit="mL/min·kg" value="42" startDate="2026-05-09 10:00:00 +0200"/></HealthData>')
+    records, stats = parse_records(xml)
+    assert stats.parsed == 3
+    assert {r["category"] for r in records} == {"vitals", "nutrition", "daily"}
+    assert {r["type"] for r in records} == {"blood_glucose", "caffeine", "vo2max"}

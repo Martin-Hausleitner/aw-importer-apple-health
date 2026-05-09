@@ -10,16 +10,53 @@ from typing import Any, Iterable
 from xml.etree import ElementTree as ET
 
 TYPE_MAP = {
+    # Activity / movement
     "HKQuantityTypeIdentifierStepCount": ("daily", "steps"),
+    "HKQuantityTypeIdentifierDistanceWalkingRunning": ("daily", "walking_running_distance"),
+    "HKQuantityTypeIdentifierDistanceCycling": ("daily", "cycling_distance"),
+    "HKQuantityTypeIdentifierDistanceSwimming": ("daily", "swimming_distance"),
+    "HKQuantityTypeIdentifierFlightsClimbed": ("daily", "flights_climbed"),
+    "HKQuantityTypeIdentifierAppleExerciseTime": ("daily", "exercise_time"),
+    "HKQuantityTypeIdentifierAppleStandTime": ("daily", "stand_time"),
     "HKQuantityTypeIdentifierActiveEnergyBurned": ("daily", "active_energy"),
+    "HKQuantityTypeIdentifierBasalEnergyBurned": ("daily", "basal_energy"),
+    "HKQuantityTypeIdentifierVO2Max": ("daily", "vo2max"),
+
+    # Heart / vitals
     "HKQuantityTypeIdentifierHeartRate": ("vitals", "heart_rate"),
     "HKQuantityTypeIdentifierRestingHeartRate": ("daily", "resting_heart_rate"),
+    "HKQuantityTypeIdentifierWalkingHeartRateAverage": ("daily", "walking_heart_rate_average"),
     "HKQuantityTypeIdentifierHeartRateVariabilitySDNN": ("daily", "hrv_sdnn"),
+    "HKQuantityTypeIdentifierRespiratoryRate": ("vitals", "respiratory_rate"),
+    "HKQuantityTypeIdentifierOxygenSaturation": ("vitals", "blood_oxygen"),
+    "HKQuantityTypeIdentifierBodyTemperature": ("vitals", "body_temperature"),
+    "HKQuantityTypeIdentifierBloodPressureSystolic": ("vitals", "blood_pressure_systolic"),
+    "HKQuantityTypeIdentifierBloodPressureDiastolic": ("vitals", "blood_pressure_diastolic"),
+    "HKQuantityTypeIdentifierBloodGlucose": ("vitals", "blood_glucose"),
+
+    # Body metrics
     "HKQuantityTypeIdentifierBodyMass": ("daily", "body_mass"),
-    "HKQuantityTypeIdentifierAppleExerciseTime": ("daily", "exercise_time"),
+    "HKQuantityTypeIdentifierBodyMassIndex": ("daily", "bmi"),
+    "HKQuantityTypeIdentifierBodyFatPercentage": ("daily", "body_fat_percentage"),
+    "HKQuantityTypeIdentifierLeanBodyMass": ("daily", "lean_body_mass"),
+    "HKQuantityTypeIdentifierHeight": ("daily", "height"),
+    "HKQuantityTypeIdentifierWaistCircumference": ("daily", "waist_circumference"),
+
+    # Nutrition / hydration, if present in HealthKit
+    "HKQuantityTypeIdentifierDietaryEnergyConsumed": ("nutrition", "dietary_energy"),
+    "HKQuantityTypeIdentifierDietaryProtein": ("nutrition", "protein"),
+    "HKQuantityTypeIdentifierDietaryCarbohydrates": ("nutrition", "carbohydrates"),
+    "HKQuantityTypeIdentifierDietaryFatTotal": ("nutrition", "fat_total"),
+    "HKQuantityTypeIdentifierDietarySugar": ("nutrition", "sugar"),
+    "HKQuantityTypeIdentifierDietaryFiber": ("nutrition", "fiber"),
+    "HKQuantityTypeIdentifierDietaryWater": ("nutrition", "water"),
+    "HKQuantityTypeIdentifierDietaryCaffeine": ("nutrition", "caffeine"),
+
+    # Sessions / categories
     "HKCategoryTypeIdentifierMindfulSession": ("mindfulness", "mindful_session"),
     "HKCategoryTypeIdentifierSleepAnalysis": ("sleep", "sleep_analysis"),
-    "HKQuantityTypeIdentifierToothbrushingEvent": ("habits", "toothbrushing"),
+    "HKCategoryTypeIdentifierToothbrushingEvent": ("habits", "toothbrushing"),
+    "HKCategoryTypeIdentifierHandwashingEvent": ("habits", "handwashing"),
 }
 
 DEFAULT_TYPES = tuple(TYPE_MAP)

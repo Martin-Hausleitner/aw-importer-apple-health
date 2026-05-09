@@ -22,6 +22,17 @@ TYPE_ALIASES = {
     "body_mass": ("daily", "body_mass"),
     "weight": ("daily", "body_mass"),
     "toothbrushing": ("habits", "toothbrushing"),
+    "blood_glucose": ("vitals", "blood_glucose"),
+    "glucose": ("vitals", "blood_glucose"),
+    "blood_oxygen": ("vitals", "blood_oxygen"),
+    "oxygen_saturation": ("vitals", "blood_oxygen"),
+    "respiratory_rate": ("vitals", "respiratory_rate"),
+    "vo2max": ("daily", "vo2max"),
+    "caffeine": ("nutrition", "caffeine"),
+    "water": ("nutrition", "water"),
+    "protein": ("nutrition", "protein"),
+    "carbohydrates": ("nutrition", "carbohydrates"),
+    "fat_total": ("nutrition", "fat_total"),
 }
 
 
