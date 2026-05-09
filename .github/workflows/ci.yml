@@ -18,7 +18,5 @@ jobs:
         run: ruff check .
       - name: Tests
         run: pytest -q
-      - name: Secret scan
-        run: |
-          ! grep -RInE 'access_token|refresh_token|client_secret|BEGIN PRIVATE KEY|AKIA[0-9A-Z]{16}|X-Amz-Signature=' . \
-            --exclude-dir=.git --exclude-dir=.github --exclude-dir=.venv --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache
+      - name: Privacy check
+        run: python scripts/privacy-check.py
