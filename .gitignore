@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+# Real Apple Health exports are private health data
+export.xml
+*.zip
+*.xml.gz
+ActivityWatchImports/
