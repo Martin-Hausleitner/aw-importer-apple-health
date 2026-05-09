@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from aw_importer_apple_health.json_import import parse_json_records
 from aw_importer_apple_health.parser import parse_records
 
 
@@ -17,3 +18,12 @@ def test_parse_selected_health_records(tmp_path: Path) -> None:
     assert stats.skipped == 1
     assert {r["category"] for r in records} == {"daily", "vitals", "workout"}
     assert records[0]["value"] == 120
+
+
+def test_parse_health_sync_json(tmp_path: Path) -> None:
+    path = tmp_path / "steps.json"
+    path.write_text('[{"type":"steps","value":42,"unit":"count","start":"2026-05-09T08:00:00+02:00","end":"2026-05-09T08:05:00+02:00"}]')
+    records = parse_json_records(path)
+    assert records[0]["category"] == "daily"
+    assert records[0]["type"] == "steps"
+    assert records[0]["value"] == 42
