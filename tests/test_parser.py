@@ -1,4 +1,5 @@
 from pathlib import Path
+import zipfile
 
 from aw_importer_apple_health.json_import import parse_json_records
 from aw_importer_apple_health.parser import parse_records
@@ -60,3 +61,31 @@ def test_expanded_healthkit_types_parse(tmp_path: Path) -> None:
     assert stats.parsed == 3
     assert {r["category"] for r in records} == {"vitals", "nutrition", "daily"}
     assert {r["type"] for r in records} == {"blood_glucose", "caffeine", "vo2max"}
+
+
+def test_parse_export_zip_finds_nested_export_xml(tmp_path: Path) -> None:
+    archive = tmp_path / "apple_health_export.zip"
+    with zipfile.ZipFile(archive, "w") as zf:
+        zf.writestr(
+            "apple_health_export/export.xml",
+            '<HealthData><Record type="HKQuantityTypeIdentifierStepCount" unit="count" value="7" startDate="2026-05-09 08:00:00 +0200"/></HealthData>',
+        )
+    records, stats = parse_records(archive)
+    assert stats.parsed == 1
+    assert records[0]["type"] == "steps"
+    assert records[0]["value"] == 7
+
+
+def test_parse_json_records_from_common_wrapper_keys(tmp_path: Path) -> None:
+    path = tmp_path / "wrapped.json"
+    path.write_text('{"records":[{"metric":"heart-rate","quantity":61,"start_time":"2026-05-09T08:00:00+02:00"}]}')
+    records = parse_json_records(path)
+    assert records == [
+        {
+            "type": "heart_rate",
+            "category": "vitals",
+            "value": 61,
+            "start": "2026-05-09T08:00:00+02:00",
+            "end": "2026-05-09T08:00:00+02:00",
+        }
+    ]

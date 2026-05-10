@@ -22,6 +22,7 @@ def main() -> None:
 @click.option("--type", "types", multiple=True, help="HealthKit type identifier to include. Repeatable.")
 @click.option("--dry-run", is_flag=True, help="Parse without writing to ActivityWatch.")
 def import_export(path: Path, types: tuple[str, ...], dry_run: bool) -> None:
+    """Import an Apple Health export.xml, .xml.gz, or export ZIP."""
     records, stats = parse_records(path, types or DEFAULT_TYPES)
     by_category = Counter(r["category"] for r in records)
     inserted = _write_records(records, dry_run=dry_run)
@@ -59,7 +60,7 @@ def _write_records(records: list[dict], dry_run: bool = False, state: ImportStat
 @click.option("--type", "fallback_type", help="Fallback metric type if JSON records do not include one, e.g. steps or sleep.")
 @click.option("--dry-run", is_flag=True, help="Parse without writing to ActivityWatch.")
 def import_json(path: Path, fallback_type: str | None, dry_run: bool) -> None:
-    """Import HealthKit-sync style JSON records."""
+    """Import one HealthKit-sync style JSON file."""
     records = parse_json_records(path, fallback_type=fallback_type)
     by_category = Counter(r["category"] for r in records)
     inserted = _write_records(records, dry_run=dry_run)
